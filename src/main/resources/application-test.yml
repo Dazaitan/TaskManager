@@ -1,0 +1,22 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # Crea y elimina tablas al inicio y al final de las pruebas
+  h2:
+    console:
+      enabled: true # Habilita la consola para inspección durante las pruebas
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org:
+      springframework:
+        beans:
+          factory: DEBUG

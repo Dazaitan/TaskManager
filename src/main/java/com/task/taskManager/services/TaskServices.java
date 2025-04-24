@@ -10,8 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class TaskServices {
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
+
+    public TaskServices(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -24,17 +27,25 @@ public class TaskServices {
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
-    @Scheduled(fixedRate = 60000) // Ejecuta cada minuto
-    public void closeExpiredTasks() {
+
+    @Scheduled(fixedRate = 60000) // Ejecutar cada minuto
+    public void scheduledCloseExpiredTasks() {
+        /*Tuve que separar la logica principal de la tarea programada
+         para poder manejar parametros y testear el metodo principal.*/
         LocalDateTime now = LocalDateTime.now();
-        List<Task> expiredTasks = taskRepository.findByDueDateBeforeAndCompletedFalse(LocalDateTime.now());
+        closeExpiredTasks(now);
+    }
+
+    public void closeExpiredTasks(LocalDateTime now) {
+        List<Task> expiredTasks = taskRepository.findByDueDateBeforeAndCompletedFalse(now);
         expiredTasks.forEach(task -> {
             task.setCompleted(true);
-            task.setClosedAt(now);
+            task.setClosedAt(now); // Establecer hora de cierre
             taskRepository.save(task);
             System.out.println("Se cerró la tarea automáticamente: " + task.getTitle());
         });
     }
+
     public String checkTaskStatus(Long id) {
         return taskRepository.findById(id)
                 .map(task -> task.isCompleted() ? "Se cerró la tarea: " + task.getTitle() : "Tarea activa")
