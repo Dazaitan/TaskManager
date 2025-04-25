@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "6fe0db72-9edc-474a-89ff-8f0e674a9a43",
+		"name": "TaskManager API",
+		"description": "🌟 **Estructura del Modelo de Tarea**  \n\n| Campo | Tipo | Descripción |\n| --- | --- | --- |\n| `id` | Long | Identificador único de la tarea |\n| `title` | String | Título de la tarea |\n| `description` | String | Descripción detallada de la tarea |\n| `completed` | Boolean | Indica si la tarea fue completada |\n| `dueDate` | LocalDateTime | Fecha límite para completar la tarea |\n| `closedAt` | LocalDateTime | Fecha en la que la tarea fue cerrada |",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40951832"
+	},
+	"item": [
+		{
+			"name": "Obtener estado de la tarea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/task/2/status",
+				"description": "StartFragment\n\n`GET /{id}/status`\n\n- **Descripción**: Devuelve el estado de una tarea específica por su ID.\n    \n- **Parámetros de ruta**:\n    \n    - `id` (Long): ID único de la tarea.\n        \n- **Respuesta exitosa**:\n    \n    - **Código HTTP**: `200 OK`\n        \n    - **Cuerpo**: Un mensaje con el estado de la tarea\n        \n\n``` json\n\"Tarea activa\"\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Crear nueva tarea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Nueva tarea\",\n    \"description\": \"Descripción de la tarea\",\n    \"dueDate\": \"2025-04-25T10:00:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/task",
+				"description": "`POST /`\n\n- **Descripción**: Crea una nueva tarea en la base de datos.\n    \n- **Cuerpo de la solicitud (JSON)**:  \n    \n\n``` json\n{\n  \"title\": \"Nueva tarea\",\n  \"description\": \"Descripción de la tarea\",\n  \"dueDate\": \"2025-04-25T10:00:00\"\n}\n\n ```\n\n**Respuesta exitosa**:\n\n- **Código HTTP**: `200 OK`\n    \n- **Cuerpo**: La tarea creada en formato JSON.\n    \n\n``` json\n{\n  \"id\": 1,\n  \"title\": \"Nueva tarea\",\n  \"description\": \"Descripción de la tarea\",\n  \"completed\": false,\n  \"dueDate\": \"2025-04-25T10:00:00\",\n  \"closedAt\": null\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Cerrar tareas expiradas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/task/close-task",
+				"description": "`POST /close-task`\n\n- **Descripción**: Fuerza el cierre de todas las tareas que han vencido su fecha límite (`dueDate`) y no han sido completadas.\n    \n- **Respuesta exitosa**:\n    \n    - **Código HTTP**: `204 No Content`"
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar tarea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/task/3",
+				"description": "`DELETE /{id}`\n\n- **Descripción**: Elimina una tarea específica por su ID.\n    \n- **Parámetros de ruta**:\n    \n    - `id` (Long): ID único de la tarea.\n        \n- **Respuesta exitosa**:\n    \n    - **Código HTTP**: `204 No Content`"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener todas las tareas",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/task",
+				"description": "`GET /`\n\n- **Descripción**: Devuelve una lista con todas las tareas existentes en la base de datos.\n    \n- **Respuesta exitosa**:\n    \n    - **Código HTTP**: `200 OK`\n        \n    - **Cuerpo**: Una lista de tareas en formato JSON.\n        \n\n``` xml\n[\n  {\n    \"id\": 1,\n    \"title\": \"Tarea 1\",\n    \"description\": \"Descripción de la tarea\",\n    \"completed\": false,\n    \"dueDate\": \"2025-04-25T10:00:00\",\n    \"closedAt\": null\n  }\n]\n\n ```"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}

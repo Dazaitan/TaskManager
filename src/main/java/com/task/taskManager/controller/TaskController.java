@@ -33,8 +33,8 @@ public class TaskController {
 
     @PostMapping("/close-task")
     public ResponseEntity<Void> forceCloseExpiredTasks() {
-        taskService.closeExpiredTasks(LocalDateTime.now()); // Ejecuta el cierre manualmente
-        return ResponseEntity.noContent().build(); // Responde con HTTP 204
+        taskService.closeExpiredTasks(LocalDateTime.now());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

@@ -9,10 +9,10 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: create-drop # Crea y elimina tablas al inicio y al final de las pruebas
+      ddl-auto: create-drop
   h2:
     console:
-      enabled: true # Habilita la consola para inspección durante las pruebas
+      enabled: true
 logging:
   level:
     org.hibernate.SQL: DEBUG
